@@ -8,13 +8,13 @@ const {
   getSession,
 } = require("../../controllers/savedSessionsController");
 
+router.route("/").get(getAllSessions);
+
 router
-  .route("/")
-  .get(getAllSessions)
+  .route("/:sessionId")
+  .get(getSession)
   .post(createNewSession)
   .put(updateSession)
   .delete(deleteSession);
-
-router.route("/:sessionId").get(getSession);
 
 module.exports = router;

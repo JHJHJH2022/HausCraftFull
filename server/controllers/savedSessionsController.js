@@ -2,74 +2,97 @@ const Session = require("../model/Session");
 
 const getAllSessions = async (req, res) => {
   const allSessions = await Session.find();
-  if (!allSessions)
-    return res.status(204).json({ message: "No design sessions found" });
+  if (allSessions.length === 0) return res.sendStatus(204);
   res.json(allSessions);
 };
 
 const createNewSession = async (req, res) => {
-  const { sessionId } = req.body;
+  const { sessionId } = req.params;
+  if (!sessionId)
+    return res.status(400).json({ message: "SessionId required" });
+
   try {
     // check if have duplicate sessionId
-    const duplicateSession = await Session.findOne({ sessionId });
-    if (duplicateSession) {
-      res.json({ message: "Session with the same sessionId already exists" });
+    const existingSession = await Session.findOne({ sessionId });
+    if (existingSession) {
+      return res.status(400).json({
+        message: `Session with sessionId ${sessionId} already exists`,
+      });
     } else {
       // if not, create new seesion
       await Session.create({ sessionId });
-      res.send({ message: `Session ${sessionId} created successfully` });
+      res
+        .status(201)
+        .json({ message: `Session ${sessionId} created successfully` });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send({ message: "Error creating session" });
+    res
+      .status(500)
+      .send({ message: "Error creating session", details: err.details });
   }
 };
 
 const updateSession = async (req, res) => {
-  const { sessionId, objects } = req.body;
+  const { sessionId } = req.params;
+  const { objects } = req.body;
+  if (!objects || !sessionId)
+    return res.status(400).json({ message: "SessionId required" });
+
   try {
     const updatedSession = await Session.findOneAndUpdate(
       { sessionId },
-      { $set: { objects: objects } }
+      { $set: { objects: objects } },
+      { new: true }
     );
     if (!updatedSession) {
-      res.status(404).send({ message: "Session does not exist" });
-    } else {
-      res.send({ message: "Session updated successfully" });
+      return res.sendStatus(404);
     }
+    res.sendStatus(200);
   } catch (err) {
     console.error(err);
-    res.status(500).send({ message: "Error updating session" });
+    res
+      .status(500)
+      .json({ message: "Error updating session", details: err.details });
   }
 };
 
 const deleteSession = async (req, res) => {
-  const { sessionId } = req.body;
+  const { sessionId } = req.params;
+  if (!sessionId)
+    return res.status(400).json({ message: "SessionId required" });
+
   try {
     const { deletedCount } = await Session.deleteOne({ sessionId });
     if (deletedCount === 0) {
-      res.status(404).send({ message: "Session does not exist" });
-    } else {
-      res.send({ message: "Session deleted successfully" });
+      return res.sendStatus(404);
     }
+    res.sendStatus(200);
   } catch (err) {
     console.error(err);
-    res.status(500).send({ message: "Error deleting session" });
+    res
+      .status(500)
+      .json({ message: "Error deleting session", details: err.details });
   }
 };
 
 const getSession = async (req, res) => {
   const { sessionId } = req.params;
+  if (!sessionId)
+    return res.status(400).json({ message: "SessionId required" });
+
   const foundSession = await Session.findOne({ sessionId });
   try {
     if (!foundSession) {
-      res.status(404).send({ message: "Session does not exist" });
-    } else {
-      res.json(foundSession);
+      return res.sendStatus(404);
     }
+    res.json(foundSession);
   } catch (err) {
     console.error(err);
-    res.status(500).send({ message: `Error finding session ${sessionId}` });
+    res.status(500).json({
+      message: `Error finding session ${sessionId}`,
+      details: err.details,
+    });
   }
 };
 
