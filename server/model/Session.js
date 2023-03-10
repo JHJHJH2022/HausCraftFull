@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const getNoOfUnitsPerLevel = require("../config/noOfUnits");
 
 const objectSchema = new Schema({
-  id: {
+  key: {
     type: String,
     required: true,
   },
@@ -19,16 +19,16 @@ const objectSchema = new Schema({
     type: [Number],
     default: [0, 0, 0],
   },
-  totalLevels: {
+  levels: {
     type: Number,
     default: 1,
   },
   unitsPerLevel: {
     // this is auto calculated based on typology
     type: Number,
-    set: function () {
-      return getNoOfUnitsPerLevel(this.typology);
-    },
+    // set: function () {
+    //   return getNoOfUnitsPerLevel(this.typology);
+    // },
   },
 });
 
@@ -37,6 +37,14 @@ const sessionSchema = new Schema({
     type: String,
     unique: true,
     required: true,
+  },
+  parkingNum: {
+    type: Number,
+    default: 0,
+  },
+  buildingNum: {
+    type: Number,
+    default: 0,
   },
   objects: [objectSchema],
 });

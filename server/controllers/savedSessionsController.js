@@ -35,14 +35,21 @@ const createNewSession = async (req, res) => {
 
 const updateSession = async (req, res) => {
   const { sessionId } = req.params;
-  const { objects } = req.body;
+  const { objects, parkingNum, buildingNum } = req.body;
+
   if (!objects || !sessionId)
-    return res.status(400).json({ message: "SessionId required" });
+    return res.status(400).json({ message: "SessionId and objects required" });
 
   try {
     const updatedSession = await Session.findOneAndUpdate(
       { sessionId },
-      { $set: { objects: objects } },
+      {
+        $set: {
+          objects: objects,
+          parkingNum: parkingNum,
+          buildingNum: buildingNum,
+        },
+      },
       { new: true }
     );
     if (!updatedSession) {
