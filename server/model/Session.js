@@ -2,6 +2,37 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const getNoOfUnitsPerLevel = require("../config/noOfUnits");
 
+const customCorridorSettingsSchema = new Schema({
+  clusterType: {
+    type: String,
+    default: "",
+  },
+  noOfFloors: {
+    type: Number,
+    default: 1,
+  },
+  noOfUnitsArr: {
+    type: [Number],
+    default: [0, 0, 0, 0],
+  },
+  corridorWidth: {
+    type: Number,
+    default: 3,
+  },
+  pairDist: {
+    type: Number,
+    default: 25,
+  },
+  rectilinearInitialDist: {
+    type: Number,
+    default: -15,
+  },
+  slideDist: {
+    type: Number,
+    default: 0,
+  },
+});
+
 const objectSchema = new Schema({
   key: {
     type: String,
@@ -30,6 +61,7 @@ const objectSchema = new Schema({
     //   return getNoOfUnitsPerLevel(this.typology);
     // },
   },
+  customCorridorSettings: customCorridorSettingsSchema,
 });
 
 const sessionSchema = new Schema({
