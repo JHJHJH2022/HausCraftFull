@@ -33,6 +33,93 @@ const customCorridorSettingsSchema = new Schema({
   },
 });
 
+const customConnectingRoadSettingsSchema = new Schema({
+  roadType: {
+    type: String,
+    default: "",
+  },
+  length: {
+    type: Number,
+    default: 1,
+  },
+});
+
+const customAmenitySettingsSchema = new Schema({
+  children: {
+    type: Boolean,
+    default: false,
+  },
+  adult: {
+    type: Boolean,
+    default: false,
+  },
+  elderly: {
+    type: Boolean,
+    default: false,
+  },
+  shape: {
+    type: String,
+    default: "",
+  },
+});
+const customCarparkSettingsSchema = new Schema({
+  roof: {
+    type: String,
+    default: "",
+  },
+  ground: {
+    type: String,
+    default: "",
+  },
+  length: {
+    type: Number,
+    default: 1,
+  },
+  level: {
+    type: Number,
+    default: 1,
+  },
+});
+const customLandscapeSettingsSchema = new Schema({
+  shape: {
+    type: String,
+    default: "",
+  },
+
+  length: {
+    type: Number,
+    default: 1,
+  },
+  width: {
+    type: Number,
+    default: 1,
+  },
+  radius: {
+    type: Number,
+    default: 1,
+  },
+  density: {
+    type: Number,
+    default: 1,
+  },
+  sizeVariation: {
+    type: Number,
+    default: 1,
+  },
+  displacement: {
+    type: Number,
+    default: 1,
+  },
+});
+
+const customSettingsSchema = new Schema({
+  customCorridorSettings: customCorridorSettingsSchema,
+  customConnectingRoadSettings: customConnectingRoadSettingsSchema,
+  customAmenitySettings: customAmenitySettingsSchema,
+  customCarparkSettings: customCarparkSettingsSchema,
+  customLandscapeSettings: customLandscapeSettingsSchema,
+});
+
 const objectSchema = new Schema({
   key: {
     type: String,
@@ -61,7 +148,7 @@ const objectSchema = new Schema({
     //   return getNoOfUnitsPerLevel(this.typology);
     // },
   },
-  customCorridorSettings: customCorridorSettingsSchema,
+  customSettings: customSettingsSchema,
 });
 
 const sessionSchema = new Schema({
